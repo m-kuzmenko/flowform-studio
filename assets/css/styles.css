@@ -114,7 +114,8 @@ textarea { min-height: 108px; resize: vertical; }
 
 .site-footer { padding: 36px 0; color: var(--muted); border-top: 1px solid var(--line); }
 .footer-row { display: flex; justify-content: space-between; gap: 24px; align-items: center; }
-.counter-slot { min-width: 88px; min-height: 31px; display: grid; place-items: center; border: 1px dashed #3a5271; border-radius: 7px; font-size: 10px; color: #8091aa; }
+.counter-slot { min-width: 88px; min-height: 31px; display: flex; align-items: center; gap: 10px; }
+#top100-widget:empty { display: none; }
 
 @media (max-width: 800px) {
   .nav { padding: 12px 0; align-items: flex-start; }
