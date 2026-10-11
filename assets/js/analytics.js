@@ -1,7 +1,7 @@
 /*
- * Единая точка для будущих счётчиков.
- * После регистрации в LiveInternet, Rambler/Top-100 и Рейтинге Mail.ru
- * их коды добавляются в HTML, а вызовы в trackEvent — в документацию сервисов.
+ * LiveInternet и Rambler/Top-100 подключены в HTML каждой страницы.
+ * data-flowform включает для Top100 «Аналитику блоков»: показы и клики
+ * по CTA, сценариям и вопросам FAQ собираются без передачи личных данных.
  */
 (function () {
   const pendingEvents = [];
@@ -11,9 +11,7 @@
     pendingEvents.push(payload);
     console.info('[analytics demo]', payload);
 
-    // Примеры подключаются только после получения реальных идентификаторов счётчиков:
-    // window.ym?.(COUNTER_ID, 'reachGoal', name, details);
-    // window._tmr?.push({ type: 'reachGoal', id: COUNTER_ID, goal: name });
+    // Top100 собирает клики по элементам с data-flowform автоматически.
   };
 
   document.addEventListener('click', (event) => {
