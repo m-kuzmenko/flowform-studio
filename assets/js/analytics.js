@@ -3,14 +3,26 @@
  * MyTracker загружается из этого общего файла, который подключён на всех шести страницах.
  * data-flowform включает для Top100 «Аналитику блоков»: показы и клики
  * по CTA, сценариям и вопросам FAQ собираются без передачи личных данных.
+ * Собственные события Top100 отправляются ниже отдельным методом reachGoal.
  */
 (function () {
   const pendingEvents = [];
   const MYTRACKER_COUNTER_ID = '3800957';
+  const TOP100_COUNTER_ID = 7752735;
   const myTrackerGoals = {
     cta_try_studio: 'earlyAccessClick',
     template_select: 'templateSelect',
     demo_form_submit: 'briefSubmit'
+  };
+  const top100Goals = {
+    cta_try_studio: { name: 'early_access_click', data: { placement: 'hero' } },
+    demo_form_submit: { name: 'brief_submit', data: { form: 'early_access' } }
+  };
+
+  // Очередь из документации Top100: действия, совершённые до загрузки
+  // внешнего скрипта, будут автоматически отправлены после его инициализации.
+  window.top100d = window.top100d || function () {
+    (window.top100d.a = window.top100d.a || []).push(arguments);
   };
 
   // Код счётчика выдан MyTracker. Общий файл гарантирует одинаковую установку
@@ -46,14 +58,21 @@
     window._tmr.push({ id: MYTRACKER_COUNTER_ID, type: 'reachGoal', goal });
   }
 
+  function sendTop100Goal(eventName) {
+    const goal = top100Goals[eventName];
+    if (!goal) return;
+    window.top100d(TOP100_COUNTER_ID, 'reachGoal', goal.name, goal.data);
+  }
+
   window.trackEvent = function trackEvent(name, details = {}) {
     const payload = { name, details, path: window.location.pathname, at: new Date().toISOString() };
     pendingEvents.push(payload);
     console.info('[analytics demo]', payload);
 
     // Top100 собирает клики по элементам с data-flowform автоматически.
-    // В MyTracker передаётся только имя цели, не введённые посетителем данные.
+    // В цели обоих счётчиков передаются только технические метки, не текст формы.
     sendMyTrackerGoal(name);
+    sendTop100Goal(name);
   };
 
   document.addEventListener('click', (event) => {
